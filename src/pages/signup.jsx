@@ -3,7 +3,7 @@ import InputField from "../components/InputField";
 
 const Signup = () => {
   return (
-    <FloatingContainer>
+    <FloatingContainer width={"lg"} align={"center"}>
       <h1 className="mb-4 text-3xl font-bold">Signup</h1>
       <form
         action=""
@@ -17,7 +17,7 @@ const Signup = () => {
             type="submit"
             className={`
               cursor-pointer rounded-md bg-[var(--accent-color)] px-4 py-2
-              hover:bg-[var(--hover-color)]
+              hover:bg-[var(--accent-hover-color)]
             `}
           >
             Sign Up

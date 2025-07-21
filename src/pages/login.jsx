@@ -3,7 +3,7 @@ import InputField from "../components/InputField";
 
 const Login = () => {
   return (
-    <FloatingContainer>
+    <FloatingContainer width={"lg"} align={"center"}>
       <h1 className="mb-4 text-3xl font-bold">Login</h1>
       <form
         action=""
@@ -16,7 +16,7 @@ const Login = () => {
             type="submit"
             className={`
               cursor-pointer rounded-md bg-[var(--accent-color)] px-4 py-2
-              hover:bg-[var(--hover-color)]
+              hover:bg-[var(--accent-hover-color)]
             `}
           >
             Log In

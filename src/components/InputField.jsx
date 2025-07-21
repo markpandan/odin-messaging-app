@@ -1,6 +1,6 @@
 import React from "react";
 
-const InputField = ({ type, label, fieldName, placeholder }) => {
+const InputField = ({ type = "text", label, fieldName, placeholder }) => {
   return (
     <div>
       <label htmlFor={fieldName}>{label}</label>
