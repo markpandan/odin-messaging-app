@@ -7,8 +7,8 @@ const Home = () => (
         {Array(5)
           .fill(null)
           .map((_, index) => (
-            <li className="p-2">
-              <MessageList key={index} />
+            <li key={index} className="p-2">
+              <MessageList />
             </li>
           ))}
       </ul>

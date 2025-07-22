@@ -9,6 +9,8 @@ import Root from "./pages/root";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Profile from "./pages/profile";
+import AuthProvider from "./contexts/AuthProvider";
+import Logout from "./pages/logout";
 
 const router = createBrowserRouter([
   {
@@ -20,12 +22,15 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <Signup /> },
       { path: "/profile", element: <Profile /> },
+      { path: "/logout", element: <Logout /> },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
