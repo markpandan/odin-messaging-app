@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(token ? jwtDecode(token) : {});
 
   const setToken = (newToken) => {
     setToken_(newToken);
@@ -16,13 +16,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       localStorage.setItem("token", token);
-      const decoded = jwtDecode(token);
 
+      const decoded = jwtDecode(token);
       setUser(decoded);
     } else {
       localStorage.removeItem("token");
       setUser({});
     }
+
+    // console.log(token, user);
   }, [token]);
 
   const contextValue = useMemo(

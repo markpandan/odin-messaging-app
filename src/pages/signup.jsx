@@ -1,8 +1,14 @@
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import FloatingContainer from "../components/FloatingContainer";
 import InputField from "../components/InputField";
+import useAuth from "../hooks/useAuth";
 import useForm from "../hooks/useForm";
+import { fetchPost } from "../utils/fetchUtils";
 
 const Signup = () => {
+  const { token } = useAuth();
+  const navigate = useNavigate();
   const { inputs, handleChange } = useForm({
     username: "",
     firstname: "",
@@ -10,10 +16,25 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  if (token) {
+    return <Navigate to="/login" />;
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(inputs);
+
+    const response = await fetchPost("users/signup", { ...inputs });
+
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.message);
+    } else {
+      setError("");
+      navigate("/", { replace: true });
+    }
   };
 
   return (
@@ -23,6 +44,11 @@ const Signup = () => {
         onSubmit={handleSubmit}
         className={`m-auto flex w-sm flex-col gap-4 text-left text-sm`}
       >
+        {error && (
+          <div className="rounded-2xl bg-[var(--accent-color)] p-4 text-center">
+            {error}
+          </div>
+        )}
         <div className="flex gap-4">
           <InputField
             type="text"

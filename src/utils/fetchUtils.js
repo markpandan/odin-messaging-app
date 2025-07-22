@@ -1,6 +1,7 @@
 const HOST_NAME = "http://localhost:5000";
 
-export const fetchGet = async (route, signal, token) => {
+export const fetchGet = async (route, options) => {
+  const { signal, token } = options;
   return await fetch(`${HOST_NAME}/${route}`, {
     method: "GET",
     headers: {

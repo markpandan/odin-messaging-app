@@ -1,15 +1,15 @@
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
 
 const Logout = () => {
   const { setToken } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setToken();
-  }, [setToken]);
-
-  return <Navigate to="/" />;
+    navigate("/login", { replace: true });
+  }, [setToken, navigate]);
 };
 
 export default Logout;

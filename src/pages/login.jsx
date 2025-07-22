@@ -39,7 +39,12 @@ const Login = () => {
         onSubmit={handleSubmit}
         className={`m-auto flex w-sm flex-col gap-4 text-left text-sm`}
       >
-        {error && <div>{error}</div>}
+        {error && (
+          <div className="rounded-2xl bg-[var(--accent-color)] p-4 text-center">
+            {error}
+          </div>
+        )}
+
         <InputField
           type="text"
           label="Username"

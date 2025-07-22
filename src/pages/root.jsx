@@ -3,11 +3,12 @@ import Navbar from "../components/Navbar";
 import useAuth from "../hooks/useAuth";
 
 const Root = () => {
-  const { user } = useAuth();
+  const { user, setToken, token } = useAuth();
+
   return (
     <>
       <Navbar user={user} />
-      <Outlet />
+      <Outlet context={{ user, setToken, token }} />
     </>
   );
 };

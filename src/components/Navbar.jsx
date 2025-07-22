@@ -14,7 +14,7 @@ const Navbar = ({ user }) => {
         {Object.keys(user).length !== 0 ? (
           <>
             <Link
-              to={"/"}
+              to={"/profile"}
               className={`
                 border-yellow-700 px-2
                 hover:border-b-1
