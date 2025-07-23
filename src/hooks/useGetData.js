@@ -37,7 +37,7 @@ const useGetData = (route, token) => {
     return () => abortController.abort();
   }, [route, token, loading]);
 
-  return { data, loading, setLoading, error };
+  return { data, loading, setLoading, error, setError };
 };
 
 export default useGetData;

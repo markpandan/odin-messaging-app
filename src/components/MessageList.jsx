@@ -1,11 +1,11 @@
 import React from "react";
 
-const MessageList = ({ fullname, message, onClick }) => {
+const MessageItem = ({ fullname, message, onClick }) => {
   const [firstname, lastname] = fullname;
   return (
     <div
       className={`
-        h-30 cursor-pointer rounded-2xl border-[var(--secondary-color)] p-4 select-none
+        h-max cursor-pointer rounded-2xl border-[var(--secondary-color)] p-4 select-none
         hover:bg-[var(--primary-hover-color)]
         focus:bg-[var(--accent-color)]
       `}
@@ -13,9 +13,15 @@ const MessageList = ({ fullname, message, onClick }) => {
       onClick={onClick}
     >
       <h1 className="mb-2 text-xl font-bold">{`${firstname} ${lastname}`}</h1>
-      <p className="line-clamp-2 text-sm">{message}</p>
+      {message ? (
+        <p className="line-clamp-1 text-sm">{message}</p>
+      ) : (
+        <p className="line-clamp-1 text-sm text-zinc-600 italic">
+          {"< Empty >"}
+        </p>
+      )}
     </div>
   );
 };
 
-export default MessageList;
+export default MessageItem;

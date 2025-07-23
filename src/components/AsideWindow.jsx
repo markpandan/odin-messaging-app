@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import useGetData from "../hooks/useGetData";
-import MessageList from "./MessageList";
+import MessageItem from "./MessageList";
 
-const AsideWindow = ({ token, user, onListClick, refresh }) => {
+const AsideWindow = ({ token, user, onListClick, refresh, children }) => {
   const { data, loading, setLoading, error } = useGetData(
     `users/${user.id}/messages`,
     token
@@ -15,25 +15,34 @@ const AsideWindow = ({ token, user, onListClick, refresh }) => {
   }, [refresh, setLoading]);
 
   return (
-    <aside className="overflow-y-auto border-r-1 border-[var(--accent-color)]">
+    <aside
+      className={`relative flex flex-col overflow-y-auto border-r-1 border-[var(--accent-color)]`}
+    >
       {error && <div>{error}</div>}
-      {loading && <div>Loading...</div>}
-      <ul className="flex h-full flex-col">
+      {loading && (
+        <div
+          className={`absolute flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.3)]`}
+        >
+          Loading...
+        </div>
+      )}
+      <ul className="flex grow flex-col">
         {data.map((chat) => {
           const user = chat.users[0];
           const recentMessage = chat.messages[0];
 
           return (
             <li key={chat.id} className="p-2">
-              <MessageList
+              <MessageItem
                 fullname={[user.firstname, user.lastname]}
-                message={recentMessage.content}
+                message={recentMessage ? recentMessage.content : ""}
                 onClick={() => onListClick(chat.id)}
               />
             </li>
           );
         })}
       </ul>
+      {children}
     </aside>
   );
 };

@@ -79,32 +79,38 @@ const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
               </p>
             </div>
             <div
-              className={`flex grow basis-0 flex-col gap-4 overflow-y-auto scroll-smooth p-4`}
+              className={`flex grow basis-0 flex-col-reverse overflow-y-auto scroll-smooth p-4`}
             >
-              {loading && (
-                <div className="self-center rounded-2xl bg-[var(--accent-color)] p-4">
-                  Loading...
-                </div>
-              )}
-              {error && (
-                <div className="self-center rounded-2xl bg-[var(--accent-color)] p-4">
-                  {error}
-                </div>
-              )}
-              {content.map((message) => {
-                const origin = message.senderId == user.id ? "self" : "others";
-
-                if (
-                  message.senderId == user.id ||
-                  message.senderId == currentChatUser.id
-                ) {
-                  return (
-                    <MessageBalloon key={message.id} origin={origin}>
-                      {message.content}
-                    </MessageBalloon>
-                  );
-                }
-              })}
+              <div className="relative flex grow flex-col gap-4">
+                {loading && (
+                  <div
+                    className={`
+                      absolute flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.3)]
+                    `}
+                  >
+                    Loading...
+                  </div>
+                )}
+                {error && (
+                  <div className="self-center rounded-2xl bg-[var(--accent-color)] p-4">
+                    {error}
+                  </div>
+                )}
+                {content.map((message) => {
+                  const origin =
+                    message.senderId == user.id ? "self" : "others";
+                  if (
+                    message.senderId == user.id ||
+                    message.senderId == currentChatUser.id
+                  ) {
+                    return (
+                      <MessageBalloon key={message.id} origin={origin}>
+                        {message.content}
+                      </MessageBalloon>
+                    );
+                  }
+                })}
+              </div>
             </div>
             <form
               className="flex h-18 gap-4 border-t-1 border-[var(--accent-color)] p-4"
