@@ -35,9 +35,9 @@ const useGetData = (route, token) => {
     fetchPosts();
 
     return () => abortController.abort();
-  }, [route, token]);
+  }, [route, token, loading]);
 
-  return { data, loading, error };
+  return { data, loading, setLoading, error };
 };
 
 export default useGetData;
