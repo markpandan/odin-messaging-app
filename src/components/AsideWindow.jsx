@@ -1,11 +1,18 @@
+import { useEffect } from "react";
 import useGetData from "../hooks/useGetData";
 import MessageList from "./MessageList";
 
-const AsideWindow = ({ token, user, onListClick }) => {
-  const { data, loading, error } = useGetData(
+const AsideWindow = ({ token, user, onListClick, refresh }) => {
+  const { data, loading, setLoading, error } = useGetData(
     `users/${user.id}/messages`,
     token
   );
+
+  useEffect(() => {
+    if (refresh) {
+      setLoading(true);
+    }
+  }, [refresh, setLoading]);
 
   return (
     <aside className="overflow-y-auto border-r-1 border-[var(--accent-color)]">

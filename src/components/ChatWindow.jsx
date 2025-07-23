@@ -3,7 +3,7 @@ import MessageBalloon from "../components/MessageBalloon";
 import { useEffect, useState } from "react";
 import { fetchGet } from "../utils/fetchUtils";
 
-const ChatWindow = ({ chatId, user, token, onMessageSubmit }) => {
+const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
   const { inputs, setInputs, handleChange } = useForm({
     message: "",
   });
@@ -49,72 +49,91 @@ const ChatWindow = ({ chatId, user, token, onMessageSubmit }) => {
     fetchChat();
 
     return () => abortController.abort();
-  }, [chatId, token, user]);
+  }, [chatId, token, user, loading]);
+
+  useEffect(() => {
+    if (refresh) {
+      setLoading(true);
+    }
+  }, [refresh, setLoading]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     onMessageSubmit(inputs, chatId);
     setInputs({ message: "" });
   };
 
   return (
     <div className="col-span-3 bg-[var(--secondary-color)] p-4">
-      <div className="flex h-full w-full flex-col rounded-md bg-[var(--primary-color)]">
-        <div className="h-18 border-b-1 border-[var(--accent-color)] p-4">
-          <p className="text-2xl">
-            {currentChatUser
-              ? `${currentChatUser.firstname} ${currentChatUser.lastname}`
-              : "Select A User To Continue"}
-          </p>
-        </div>
-        <div className="flex grow basis-0 flex-col gap-4 overflow-y-auto p-4">
-          {/* {chatLoading && <div>Loading...</div>} */}
-          {error && (
-            <div className="self-center rounded-2xl bg-[var(--accent-color)] p-4">
-              {error}
+      <div
+        className={`flex h-full w-full flex-col justify-center rounded-md bg-[var(--primary-color)]`}
+      >
+        {!currentChatUser ? (
+          <div className="self-center text-3xl">Select A User To Continue</div>
+        ) : (
+          <>
+            <div className="h-18 border-b-1 border-[var(--accent-color)] p-4">
+              <p className="text-2xl">
+                {`${currentChatUser.firstname} ${currentChatUser.lastname}`}
+              </p>
             </div>
-          )}
-          {content.map((message) => {
-            const origin = message.senderId == user.id ? "self" : "others";
+            <div
+              className={`flex grow basis-0 flex-col gap-4 overflow-y-auto scroll-smooth p-4`}
+            >
+              {loading && (
+                <div className="self-center rounded-2xl bg-[var(--accent-color)] p-4">
+                  Loading...
+                </div>
+              )}
+              {error && (
+                <div className="self-center rounded-2xl bg-[var(--accent-color)] p-4">
+                  {error}
+                </div>
+              )}
+              {content.map((message) => {
+                const origin = message.senderId == user.id ? "self" : "others";
 
-            if (
-              message.senderId == user.id ||
-              message.senderId == currentChatUser.id
-            ) {
-              return (
-                <MessageBalloon key={message.id} origin={origin}>
-                  {message.content}
-                </MessageBalloon>
-              );
-            }
-          })}
-        </div>
-        <form
-          className="flex h-18 gap-4 border-t-1 border-[var(--accent-color)] p-4"
-          onSubmit={handleSubmit}
-        >
-          <input
-            type="text"
-            className={`
-              block h-full grow rounded-2xl bg-[var(--tertiary-color)] px-4 text-sm/6
-              focus:outline-2 focus:outline-[var(--accent-color)]
-            `}
-            name="message"
-            onChange={handleChange}
-            value={inputs.message}
-          />
-          <button
-            type="submit"
-            className={`
-              cursor-pointer rounded-2xl bg-[var(--accent-color)] px-4
-              hover:not-disabled:bg-[var(--accent-hover-color)]
-              disabled:cursor-not-allowed
-            `}
-            disabled={currentChatUser ? false : true}
-          >
-            Send
-          </button>
-        </form>
+                if (
+                  message.senderId == user.id ||
+                  message.senderId == currentChatUser.id
+                ) {
+                  return (
+                    <MessageBalloon key={message.id} origin={origin}>
+                      {message.content}
+                    </MessageBalloon>
+                  );
+                }
+              })}
+            </div>
+            <form
+              className="flex h-18 gap-4 border-t-1 border-[var(--accent-color)] p-4"
+              onSubmit={handleSubmit}
+            >
+              <input
+                type="text"
+                className={`
+                  block h-full grow rounded-2xl bg-[var(--tertiary-color)] px-4 text-sm/6
+                  focus:outline-2 focus:outline-[var(--accent-color)]
+                `}
+                name="message"
+                onChange={handleChange}
+                value={inputs.message}
+              />
+              <button
+                type="submit"
+                className={`
+                  cursor-pointer rounded-2xl bg-[var(--accent-color)] px-4
+                  hover:not-disabled:bg-[var(--accent-hover-color)]
+                  disabled:cursor-not-allowed
+                `}
+                disabled={currentChatUser ? false : true}
+              >
+                Send
+              </button>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
