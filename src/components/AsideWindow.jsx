@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useGetData from "../hooks/useGetData";
-import MessageItem from "./MessageList";
+import MessageItem from "./MessageItem";
 
 const AsideWindow = ({ token, user, onListClick, refresh, children }) => {
   const { data, loading, setLoading, error } = useGetData(
     `users/${user.id}/messages`,
     token
   );
+
+  const [selectedUser, setSelectedUser] = useState("");
 
   useEffect(() => {
     if (refresh) {
@@ -36,7 +38,11 @@ const AsideWindow = ({ token, user, onListClick, refresh, children }) => {
               <MessageItem
                 fullname={[user.firstname, user.lastname]}
                 message={recentMessage ? recentMessage.content : ""}
-                onClick={() => onListClick(chat.id)}
+                selected={selectedUser == chat.id}
+                onClick={() => {
+                  setSelectedUser(chat.id);
+                  onListClick(chat.id);
+                }}
               />
             </li>
           );
