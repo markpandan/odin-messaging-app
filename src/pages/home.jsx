@@ -27,15 +27,30 @@ const Home = () => {
     setChatId(chatId);
   };
 
-  const handleMessageSubmit = async (inputs, chatId) => {
-    await fetchPost(
-      `chats/${chatId}`,
-      {
-        message: inputs.message,
-        senderId: user.id,
+  const handleMessageSubmit = async (inputs, chatId, file) => {
+    // await fetchPost(
+    //   `chats/${chatId}`,
+    //   {
+    //     message: inputs.message,
+    //     senderId: user.id,
+    //   },
+    //   token
+    // );
+
+    const formData = new FormData();
+    formData.append("message", inputs.message);
+    formData.append("senderId", user.id);
+    formData.append("image", file);
+
+    await fetch(`http://localhost:5000/chats/${chatId}`, {
+      method: "POST",
+      headers: {
+        Authorization: token,
       },
-      token
-    );
+      body: formData,
+      mode: "cors",
+    });
+
     setRefresh(true);
   };
 

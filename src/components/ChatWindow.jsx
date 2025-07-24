@@ -1,6 +1,6 @@
-import useForm from "../hooks/useForm";
+import { Fragment, useEffect, useRef, useState } from "react";
 import MessageBalloon from "../components/MessageBalloon";
-import { useEffect, useState } from "react";
+import useForm from "../hooks/useForm";
 import { fetchGet } from "../utils/fetchUtils";
 
 const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
@@ -11,7 +11,10 @@ const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
   const [content, setContent] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState("");
   const [currentChatUser, setCurrentChatUser] = useState();
+
+  const fileRef = useRef(null);
 
   useEffect(() => {
     if (!chatId) return;
@@ -60,8 +63,26 @@ const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onMessageSubmit(inputs, chatId);
+    onMessageSubmit(inputs, chatId, selectedFile);
     setInputs({ message: "" });
+    setSelectedFile("");
+    setError("");
+
+    fileRef.current.value = "";
+  };
+
+  const onFileChange = (e) => {
+    if (e.target.files.length == 0) return;
+
+    const file = e.target.files[0];
+    const type = e.target.files[0].type;
+
+    if (type.match(/^image/)) {
+      setSelectedFile(file);
+      setError("");
+    } else {
+      setError("Only images are allowed");
+    }
   };
 
   return (
@@ -104,18 +125,69 @@ const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
                     message.senderId == currentChatUser.id
                   ) {
                     return (
-                      <MessageBalloon key={message.id} origin={origin}>
-                        {message.content}
-                      </MessageBalloon>
+                      <Fragment key={message.id}>
+                        <MessageBalloon origin={origin}>
+                          {message.content}
+                        </MessageBalloon>
+                        {message.file && (
+                          <MessageBalloon origin={origin}>
+                            <img
+                              src={message.file.url}
+                              alt="Sent Image of Message"
+                            />
+                          </MessageBalloon>
+                        )}
+                      </Fragment>
                     );
                   }
                 })}
               </div>
             </div>
+            {selectedFile && (
+              <div
+                className={`
+                  flex justify-between border-t-1 border-[var(--accent-color)]
+                  bg-[var(--tertiary-color)] px-4 py-2
+                `}
+              >
+                <p>
+                  Image: <span>{selectedFile.name}</span>
+                </p>
+                <button
+                  className={`
+                    cursor-pointer rounded-md px-2
+                    hover:bg-[var(--primary-color)]
+                  `}
+                  onClick={() => setSelectedFile("")}
+                >
+                  X
+                </button>
+              </div>
+            )}
+
             <form
               className="flex h-18 gap-4 border-t-1 border-[var(--accent-color)] p-4"
               onSubmit={handleSubmit}
+              encType="multipart/form-data"
             >
+              <label
+                htmlFor="image"
+                className={`
+                  flex cursor-pointer items-center rounded-full bg-[var(--accent-color)] px-3
+                  text-2xl
+                  hover:bg-[var(--accent-hover-color)]
+                `}
+              >
+                +
+                <input
+                  ref={fileRef}
+                  type="file"
+                  name="image"
+                  id="image"
+                  className="hidden"
+                  onChange={onFileChange}
+                />
+              </label>
               <input
                 type="text"
                 className={`
@@ -125,6 +197,7 @@ const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
                 name="message"
                 onChange={handleChange}
                 value={inputs.message}
+                required
               />
               <button
                 type="submit"
@@ -133,7 +206,6 @@ const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
                   hover:not-disabled:bg-[var(--accent-hover-color)]
                   disabled:cursor-not-allowed
                 `}
-                disabled={currentChatUser ? false : true}
               >
                 Send
               </button>
