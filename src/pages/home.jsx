@@ -42,7 +42,7 @@ const Home = () => {
     formData.append("senderId", user.id);
     formData.append("image", file);
 
-    await fetch(`http://localhost:5000/chats/${chatId}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/chats/${chatId}`, {
       method: "POST",
       headers: {
         Authorization: token,
