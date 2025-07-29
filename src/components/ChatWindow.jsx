@@ -87,7 +87,7 @@ const ChatWindow = ({ chatId, user, token, refresh, onMessageSubmit }) => {
 
   return (
     <div className="col-span-3 bg-[var(--secondary-color)] p-4">
-      <div
+      <div onCon
         className={`flex h-full w-full flex-col justify-center rounded-md bg-[var(--primary-color)]`}
       >
         {!currentChatUser ? (
