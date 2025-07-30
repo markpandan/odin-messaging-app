@@ -3,7 +3,6 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import AddChatDialog from "../components/AddChatDialog";
 import AsideWindow from "../components/AsideWindow";
 import ChatWindow from "../components/ChatWindow";
-import { fetchPost } from "../utils/fetchUtils";
 
 const Home = () => {
   const { user, token } = useOutletContext();
