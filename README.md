@@ -8,7 +8,7 @@ This repository was made as a submission requirement to [The Odin Project: Messa
 
 ## Live Demo
 
-You can access the website here: https://odin-messaging-app-three.vercel.app/login
+You can access the website here: https://markpandan-buzzchat.vercel.app/
 
 ## Features
 
